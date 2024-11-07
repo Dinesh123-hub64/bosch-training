@@ -1,1 +1,1 @@
-# bosch-training
+# bosch-bootcamp-java

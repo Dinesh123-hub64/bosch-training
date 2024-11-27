@@ -65,16 +65,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void printStatistics() {
-//        Map<Integer, Product> products = new HashMap<>();
-//        products.put(100, new Product(100, ProductCategory.LAPTOPS, "Dell Inspiron", 5000, true));
-//        products.put(101, new Product(101, ProductCategory.FURNITURES, "xyz", 30000, true));
-//        products.put(102, new Product(102, ProductCategory.MOBILES, "Samsung", 35000, true));
-//        products.put(103, new Product(103, ProductCategory.STATIONARY, "pen", 1000, true));
-//        products.put(104, new Product(104, ProductCategory.LAPTOPS, "Hp", 35000, true));
-//        products.put(105, new Product(105, ProductCategory.MOBILES, "Iphone 16", 6000, true));
-//        products.put(106, new Product(106, ProductCategory.FURNITURES, "abc", 60000, true));
-//        products.put(107, new Product(107, ProductCategory.LAPTOPS, "Mac", 75000, true));
-
         //No of products whose price more than 10k
         long countExpensiveProducts = products.values().stream()
                 .filter(p -> p.getPrice() > 10000)
@@ -109,6 +99,22 @@ public class ProductServiceImpl implements ProductService {
         System.out.println("Total products: " + totalProducts);
         System.out.println("Total available products: " + totalAvailable);
         System.out.println("Average price: " + averagePrice);
+
+        //List product ids whose product name contains given name
+        Scanner in = new Scanner(System.in);
+        System.out.print("Enter name to search for product IDs: ");
+        String searchName = in.nextLine();
+        List<Integer> matchingProductIds = products.values().stream()
+                .filter(product -> product.getDescription().toLowerCase().contains(searchName.toLowerCase()))
+                .map(Product::getId)
+                .collect(Collectors.toList());
+        if (matchingProductIds.isEmpty()) {
+            System.out.println("No products found with name containing: " + searchName);
+        } else {
+
+            System.out.println("Product IDs containing name '" + searchName + "': " + matchingProductIds);
+        }        
+        
     }
 
     @Override
@@ -136,7 +142,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean exportProducts() {
-        String filePath = "./input/product-export.txt";
+        String filePath = "./output/product-output.txt";
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
             bw.write("id,category,name,price,active\n");
             for (Product product : products.values()) {

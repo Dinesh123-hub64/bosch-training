@@ -72,18 +72,24 @@ public class ProductAppMain {
 
         switch (choice) {
             case 1:
-                Product product = captureProductDetails();
+                Product product = captureProductDetails(in);
                 service.addProduct(product);
                 break;
             case 2:
-                Product updatedProduct = captureProductDetails();
+                Product updatedProduct = captureProductDetails(in);
                 service.updateProduct(updatedProduct.getId(), updatedProduct);
                 System.out.println("Update Product");
                 break;
             case 3:
-                int deleteId = in.nextInt();
-                service.deleteProduct(deleteId);
-                System.out.println("Delete Product");
+                System.out.print("Enter Product ID to delete: ");
+                if (in.hasNextInt()) {
+                    int deleteId = in.nextInt();
+                    in.nextLine();
+                    service.deleteProduct(deleteId);
+                    System.out.println("Delete Product");
+                } else {
+                    System.out.println("Invalid input. Please enter a valid Product ID.");
+                }
                 break;
             case 4:
                 System.out.print("Enter Product ID: ");
@@ -112,7 +118,6 @@ public class ProductAppMain {
                 };
                 Future<Boolean> impFuture = es.submit(importTask);
                 System.out.println(impFuture.get() ? "Imported successfully" : "Import failed");
-
                 break;
             case 8:
                 Callable<Boolean> exportTask = new Callable<Boolean>() {
@@ -137,9 +142,8 @@ public class ProductAppMain {
 
     }
 
-    private static Product captureProductDetails() {
+    private static Product captureProductDetails(Scanner in) {
         // TODO: Logic to capture the product details from user
-        Scanner in = new Scanner(System.in);
         System.out.println("Enter Product ID: ");
         int id = in.nextInt();
         System.out.println("Enter Product Category (LAPTOPS, FURNITURE, MOBILES, STATIONARY): ");
